@@ -1,0 +1,78 @@
+{
+  "common": {
+    "login": "Login",
+    "logout": "Logout",
+    "cancel": "Cancel",
+    "save": "Save",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "login": {
+    "title": "Login",
+    "googleLogin": "Sign in with Google",
+    "invalidEmail": "Invalid email or not a student email",
+    "loginSuccess": "Login successful"
+  },
+  "home": {
+    "title": "Home",
+    "askAI": "Ask AI",
+    "askAIPlaceholder": "Enter your question...",
+    "recentNotifications": "Recent Notifications",
+    "shortcuts": "Shortcuts",
+    "clubDirectory": "Club Directory",
+    "collections": "Collections"
+  },
+  "aiqa": {
+    "title": "Ask AI",
+    "placeholder": "Enter your question...",
+    "send": "Send",
+    "feedback": "Feedback",
+    "like": "Helpful",
+    "dislike": "Not helpful",
+    "feedbackThanks": "Thanks for your feedback!"
+  },
+  "clubs": {
+    "title": "Clubs",
+    "searchPlaceholder": "Search clubs by name, type...",
+    "filters": "Filters",
+    "academic": "Academic",
+    "sports": "Sports",
+    "cultural": "Cultural",
+    "social": "Social",
+    "allTypes": "All Types",
+    "noClubs": "No clubs found"
+  },
+  "clubDetail": {
+    "title": "Club Details",
+    "management": "Management",
+    "contact": "Contact",
+    "events": "Upcoming Events",
+    "join": "Join",
+    "email": "Email",
+    "fanpage": "Fanpage"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "all": "All",
+    "academic": "Academic",
+    "events": "Events",
+    "clubs": "Clubs",
+    "noNotifications": "No notifications"
+  },
+  "profile": {
+    "title": "Profile",
+    "settings": "Settings",
+    "language": "Language",
+    "vietnamese": "Vietnamese",
+    "english": "English",
+    "help": "Help",
+    "reportBug": "Report Bug",
+    "about": "About",
+    "studentId": "Student ID",
+    "email": "Email"
+  }
+}

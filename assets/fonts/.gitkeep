@@ -1,0 +1,7 @@
+# Place SVN-Product Sans font files here
+# Required files:
+# - SVN-Product Sans Regular.ttf (or ProductSans-Regular.ttf)
+# - SVN-Product Sans Medium.ttf (or ProductSans-Medium.ttf)  
+# - SVN-Product Sans Bold.ttf (or ProductSans-Bold.ttf)
+#
+# After adding fonts, run: npx react-native-asset

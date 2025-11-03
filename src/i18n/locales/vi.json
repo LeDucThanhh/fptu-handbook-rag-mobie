@@ -1,0 +1,78 @@
+{
+  "common": {
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "all": "Tất cả",
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công"
+  },
+  "login": {
+    "title": "Đăng nhập",
+    "googleLogin": "Đăng nhập bằng Google",
+    "invalidEmail": "Email không hợp lệ hoặc không phải email sinh viên",
+    "loginSuccess": "Đăng nhập thành công"
+  },
+  "home": {
+    "title": "Trang chủ",
+    "askAI": "Hỏi AI",
+    "askAIPlaceholder": "Nhập câu hỏi của bạn...",
+    "recentNotifications": "Thông báo gần đây",
+    "shortcuts": "Lối tắt",
+    "clubDirectory": "Thư mục Câu lạc bộ",
+    "collections": "Bộ sưu tập"
+  },
+  "aiqa": {
+    "title": "Hỏi AI",
+    "placeholder": "Nhập câu hỏi của bạn...",
+    "send": "Gửi",
+    "feedback": "Phản hồi",
+    "like": "Hữu ích",
+    "dislike": "Không hữu ích",
+    "feedbackThanks": "Cảm ơn phản hồi của bạn!"
+  },
+  "clubs": {
+    "title": "Câu lạc bộ",
+    "searchPlaceholder": "Tìm kiếm CLB theo tên, loại hình...",
+    "filters": "Bộ lọc",
+    "academic": "Học thuật",
+    "sports": "Thể thao",
+    "cultural": "Văn hóa",
+    "social": "Xã hội",
+    "allTypes": "Tất cả loại hình",
+    "noClubs": "Không tìm thấy câu lạc bộ nào"
+  },
+  "clubDetail": {
+    "title": "Chi tiết Câu lạc bộ",
+    "management": "Ban quản lý",
+    "contact": "Liên hệ",
+    "events": "Sự kiện sắp diễn ra",
+    "join": "Tham gia",
+    "email": "Email",
+    "fanpage": "Fanpage"
+  },
+  "notifications": {
+    "title": "Thông báo",
+    "all": "Tất cả",
+    "academic": "Học vụ",
+    "events": "Sự kiện",
+    "clubs": "CLB",
+    "noNotifications": "Không có thông báo nào"
+  },
+  "profile": {
+    "title": "Cá nhân",
+    "settings": "Cài đặt",
+    "language": "Ngôn ngữ",
+    "vietnamese": "Tiếng Việt",
+    "english": "Tiếng Anh",
+    "help": "Trợ giúp",
+    "reportBug": "Báo lỗi",
+    "about": "Về ứng dụng",
+    "studentId": "MSSV",
+    "email": "Email"
+  }
+}
