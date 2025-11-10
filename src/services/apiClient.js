@@ -2,7 +2,7 @@ import axios from 'axios';
 import Constants from 'expo-constants';
 
 const expoExtra = Constants.expoConfig?.extra ?? Constants.manifest?.extra ?? {};
-const baseURL = expoExtra.apiBaseUrl ?? 'https://api.example.com';
+const baseURL = expoExtra.EXPO_PUBLIC_API_URL;
 
 let authToken = null;
 let unauthorizedHandler = null;

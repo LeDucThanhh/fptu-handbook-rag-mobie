@@ -31,7 +31,7 @@ const ResourcesScreen = () => {
           lineHeight: typography.body.medium.lineHeight
         }}
       >
-        Role-based resources and quick links will appear here once the feature is connected to the backend.
+        Personalized resources and quick links will appear here once the feature is connected to the backend.
       </Text>
     </View>
   );

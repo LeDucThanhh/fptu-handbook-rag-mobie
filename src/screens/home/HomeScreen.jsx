@@ -36,7 +36,7 @@ const HomeScreen = () => {
             fontFamily: typography.body.medium.fontFamily
           }}
         >
-          Explore resources tailored to your role.
+          Explore the latest updates and resources from the handbook team.
         </Text>
       </View>
 

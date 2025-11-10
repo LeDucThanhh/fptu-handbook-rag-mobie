@@ -5,7 +5,6 @@ import { setAuthToken, registerUnauthorizedHandler } from '../services/apiClient
 const defaultAuthState = {
   user: null,
   token: null,
-  roles: [],
   isAuthenticated: false,
   isHydrating: true
 };
@@ -30,7 +29,6 @@ export const AuthProvider = ({ children }) => {
           setState({
             user: stored.user,
             token: stored.token,
-            roles: stored.roles ?? [],
             isAuthenticated: true,
             isHydrating: false
           });
@@ -52,7 +50,7 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  const signIn = useCallback(async ({ token, user, roles = [] }) => {
+  const signIn = useCallback(async ({ token, user }) => {
     const normalizedToken = normalizeTokenValue(token);
 
     if (!normalizedToken) {
@@ -60,7 +58,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      await saveCredentials({ token: normalizedToken, user, roles });
+      await saveCredentials({ token: normalizedToken, user });
     } catch (error) {
       console.warn('Failed to persist credentials', error);
     }
@@ -69,7 +67,6 @@ export const AuthProvider = ({ children }) => {
     setState({
       user,
       token: normalizedToken,
-      roles,
       isAuthenticated: Boolean(normalizedToken),
       isHydrating: false
     });
@@ -95,7 +92,7 @@ export const AuthProvider = ({ children }) => {
   const updateUser = useCallback((updater) => {
     setState((prev) => {
       const nextUser = typeof updater === 'function' ? updater(prev.user) : updater;
-      saveCredentials({ token: prev.token, user: nextUser, roles: prev.roles }).catch((error) => {
+      saveCredentials({ token: prev.token, user: nextUser }).catch((error) => {
         console.warn('Failed to persist updated user profile', error);
       });
       return {
@@ -105,28 +102,14 @@ export const AuthProvider = ({ children }) => {
     });
   }, []);
 
-  const hasRole = useCallback(
-    (requiredRoles) => {
-      if (!requiredRoles || requiredRoles.length === 0) {
-        return true;
-      }
-      if (!Array.isArray(requiredRoles)) {
-        return state.roles.includes(requiredRoles);
-      }
-      return requiredRoles.some((role) => state.roles.includes(role));
-    },
-    [state.roles]
-  );
-
   const value = useMemo(
     () => ({
       ...state,
       signIn,
       signOut,
-      updateUser,
-      hasRole
+      updateUser
     }),
-    [state, signIn, signOut, updateUser, hasRole]
+    [state, signIn, signOut, updateUser]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

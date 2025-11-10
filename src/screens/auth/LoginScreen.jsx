@@ -14,8 +14,7 @@ const LoginScreen = () => {
         id: 'local-user',
         displayName: 'FPTU Student',
         email: 'student@example.com'
-      },
-      roles: ['Student']
+      }
     });
   }, [signIn]);
 

@@ -1,38 +1,50 @@
+import { Platform } from 'react-native';
+
+const systemFont = Platform.select({ ios: 'System', android: 'sans-serif', default: 'System' });
+
 export const fontFamilies = {
-  regular: 'Urbanist_400Regular',
-  medium: 'Urbanist_500Medium',
-  semiBold: 'Urbanist_600SemiBold',
-  bold: 'Urbanist_700Bold',
-  extraBold: 'Urbanist_800ExtraBold'
+  regular: systemFont,
+  medium: systemFont,
+  semiBold: systemFont,
+  bold: systemFont,
+  extraBold: systemFont
 };
 
+const createTextStyle = (fontSize, lineHeight, fontWeight = '400') => ({
+  fontSize,
+  lineHeight,
+  fontFamily: systemFont,
+  fontWeight
+});
+
 const typography = {
-  fontFamily: fontFamilies.regular,
+  fontFamily: systemFont,
   heading: {
-    h1: { fontSize: 32, lineHeight: 38, fontFamily: fontFamilies.extraBold },
-    h2: { fontSize: 28, lineHeight: 34, fontFamily: fontFamilies.bold },
-    h3: { fontSize: 24, lineHeight: 30, fontFamily: fontFamilies.bold },
-    h4: { fontSize: 20, lineHeight: 26, fontFamily: fontFamilies.semiBold },
-    h5: { fontSize: 18, lineHeight: 24, fontFamily: fontFamilies.semiBold },
-    h6: { fontSize: 16, lineHeight: 22, fontFamily: fontFamilies.medium }
+    h1: createTextStyle(32, 38, '800'),
+    h2: createTextStyle(28, 34, '700'),
+    h3: createTextStyle(24, 30, '700'),
+    h4: createTextStyle(20, 26, '600'),
+    h5: createTextStyle(18, 24, '600'),
+    h6: createTextStyle(16, 22, '500')
   },
   body: {
-    large: { fontSize: 18, lineHeight: 26, fontFamily: fontFamilies.regular },
-    medium: { fontSize: 16, lineHeight: 24, fontFamily: fontFamilies.regular },
-    small: { fontSize: 14, lineHeight: 20, fontFamily: fontFamilies.regular },
-    tiny: { fontSize: 12, lineHeight: 18, fontFamily: fontFamilies.regular }
+    large: createTextStyle(18, 26),
+    medium: createTextStyle(16, 24),
+    small: createTextStyle(14, 20),
+    tiny: createTextStyle(12, 18)
   },
   button: {
     fontSize: 16,
-    fontFamily: fontFamilies.semiBold,
-    lineHeight: 20
+    lineHeight: 20,
+    fontFamily: systemFont,
+    fontWeight: '600'
   },
   caption: {
     fontSize: 12,
-    fontFamily: fontFamilies.medium,
-    lineHeight: 16
+    lineHeight: 16,
+    fontFamily: systemFont,
+    fontWeight: '500'
   }
 };
 
 export default typography;
-

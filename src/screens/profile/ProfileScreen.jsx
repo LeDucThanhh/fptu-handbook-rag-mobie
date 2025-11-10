@@ -5,7 +5,7 @@ import useAuth from '../../hooks/useAuth';
 
 const ProfileScreen = () => {
   const { colors, spacing, typography, radii } = useTheme();
-  const { user, roles, signOut } = useAuth();
+  const { user, signOut } = useAuth();
 
   return (
     <View
@@ -55,15 +55,6 @@ const ProfileScreen = () => {
           }}
         >
           {user?.email ?? 'email@example.com'}
-        </Text>
-        <Text
-          style={{
-            fontSize: typography.caption.fontSize,
-            fontFamily: typography.caption.fontFamily,
-            color: colors.textMuted
-          }}
-        >
-          Roles: {roles?.length ? roles.join(', ') : 'N/A'}
         </Text>
       </View>
 

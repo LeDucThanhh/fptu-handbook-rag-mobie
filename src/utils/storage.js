@@ -2,7 +2,6 @@ import * as SecureStore from 'expo-secure-store';
 
 const TOKEN_KEY = 'fptuhandbook.token';
 const USER_KEY = 'fptuhandbook.user';
-const ROLES_KEY = 'fptuhandbook.roles';
 
 export const normalizeTokenValue = (value) => {
   if (value === undefined || value === null) {
@@ -57,7 +56,7 @@ const parseJson = (value, defaultValue = null) => {
   }
 };
 
-export const saveCredentials = async ({ token, user, roles }) => {
+export const saveCredentials = async ({ token, user }) => {
   const operations = [];
 
   const normalizedToken = normalizeTokenValue(token);
@@ -74,33 +73,24 @@ export const saveCredentials = async ({ token, user, roles }) => {
       : SecureStore.deleteItemAsync(USER_KEY)
   );
 
-  operations.push(
-    roles && roles.length
-      ? SecureStore.setItemAsync(ROLES_KEY, JSON.stringify(roles))
-      : SecureStore.deleteItemAsync(ROLES_KEY)
-  );
-
   await Promise.all(operations);
 };
 
 export const loadCredentials = async () => {
-  const [token, rawUser, rawRoles] = await Promise.all([
+  const [token, rawUser] = await Promise.all([
     SecureStore.getItemAsync(TOKEN_KEY),
-    SecureStore.getItemAsync(USER_KEY),
-    SecureStore.getItemAsync(ROLES_KEY)
+    SecureStore.getItemAsync(USER_KEY)
   ]);
 
   return {
     token: normalizeTokenValue(token),
-    user: parseJson(rawUser),
-    roles: parseJson(rawRoles, [])
+    user: parseJson(rawUser)
   };
 };
 
 export const clearCredentials = async () => {
   await Promise.all([
     SecureStore.deleteItemAsync(TOKEN_KEY),
-    SecureStore.deleteItemAsync(USER_KEY),
-    SecureStore.deleteItemAsync(ROLES_KEY)
+    SecureStore.deleteItemAsync(USER_KEY)
   ]);
 };

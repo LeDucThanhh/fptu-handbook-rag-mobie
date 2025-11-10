@@ -39,16 +39,10 @@ const extractToken = (payload) => {
 export const transformAuthPayload = (payload) => {
   const token = extractToken(payload);
   const user = payload?.user ?? payload?.data?.user ?? null;
-  const roles =
-    payload?.roles ??
-    payload?.data?.roles ??
-    payload?.user?.roles ??
-    payload?.data?.user?.roles ??
-    [];
 
   if (!token) {
     throw new Error('Authentication payload missing token');
   }
 
-  return { token, user, roles };
+  return { token, user };
 };
