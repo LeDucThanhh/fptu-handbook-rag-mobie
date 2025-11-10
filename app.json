@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "fptuhandbook",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -20,10 +21,34 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "fptuhandbook",
+              "host": "auth"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "apiBaseUrl": "https://api.example.com",
+      "googleWebClientId": "",
+      "googleAndroidClientId": "",
+      "googleIosClientId": "",
+      "colors": {
+        "primary": "#FF5722",
+        "secondary": "#FFC107",
+        "background": "#FFFFFF",
+        "text": "#1A1A1A"
+      }
     }
   }
 }
