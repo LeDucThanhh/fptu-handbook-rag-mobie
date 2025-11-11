@@ -31,24 +31,18 @@
               "host": "auth"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "apiBaseUrl": "https://api.example.com",
-      "googleWebClientId": "",
-      "googleAndroidClientId": "",
-      "googleIosClientId": "",
-      "colors": {
-        "primary": "#FF5722",
-        "secondary": "#FFC107",
-        "background": "#FFFFFF",
-        "text": "#1A1A1A"
-      }
-    }
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }

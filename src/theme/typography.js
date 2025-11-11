@@ -3,47 +3,47 @@ import { Platform } from 'react-native';
 const systemFont = Platform.select({ ios: 'System', android: 'sans-serif', default: 'System' });
 
 export const fontFamilies = {
-  regular: systemFont,
-  medium: systemFont,
-  semiBold: systemFont,
-  bold: systemFont,
-  extraBold: systemFont
+  regular: 'Urbanist_400Regular',
+  medium: 'Urbanist_500Medium',
+  semiBold: 'Urbanist_600SemiBold',
+  bold: 'Urbanist_700Bold',
+  extraBold: 'Urbanist_800ExtraBold',
+  fallback: systemFont
 };
 
-const createTextStyle = (fontSize, lineHeight, fontWeight = '400') => ({
+const resolveFontFamily = (familyKey) => fontFamilies[familyKey] ?? fontFamilies.fallback;
+
+const createTextStyle = (fontSize, lineHeight, familyKey = 'regular') => ({
   fontSize,
   lineHeight,
-  fontFamily: systemFont,
-  fontWeight
+  fontFamily: resolveFontFamily(familyKey)
 });
 
 const typography = {
-  fontFamily: systemFont,
+  fontFamily: resolveFontFamily('regular'),
   heading: {
-    h1: createTextStyle(32, 38, '800'),
-    h2: createTextStyle(28, 34, '700'),
-    h3: createTextStyle(24, 30, '700'),
-    h4: createTextStyle(20, 26, '600'),
-    h5: createTextStyle(18, 24, '600'),
-    h6: createTextStyle(16, 22, '500')
+    h1: createTextStyle(32, 38, 'extraBold'),
+    h2: createTextStyle(28, 34, 'bold'),
+    h3: createTextStyle(24, 30, 'bold'),
+    h4: createTextStyle(20, 26, 'semiBold'),
+    h5: createTextStyle(18, 24, 'semiBold'),
+    h6: createTextStyle(16, 22, 'medium')
   },
   body: {
-    large: createTextStyle(18, 26),
-    medium: createTextStyle(16, 24),
-    small: createTextStyle(14, 20),
-    tiny: createTextStyle(12, 18)
+    large: createTextStyle(18, 26, 'regular'),
+    medium: createTextStyle(16, 24, 'regular'),
+    small: createTextStyle(14, 20, 'regular'),
+    tiny: createTextStyle(12, 18, 'regular')
   },
   button: {
     fontSize: 16,
     lineHeight: 20,
-    fontFamily: systemFont,
-    fontWeight: '600'
+    fontFamily: resolveFontFamily('semiBold')
   },
   caption: {
     fontSize: 12,
     lineHeight: 16,
-    fontFamily: systemFont,
-    fontWeight: '500'
+    fontFamily: resolveFontFamily('medium')
   }
 };
 

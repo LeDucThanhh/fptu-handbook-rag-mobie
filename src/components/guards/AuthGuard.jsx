@@ -21,7 +21,7 @@ const AuthGuard = ({ children, unauthenticatedFallback = null, loadingFallback }
           backgroundColor: colors.background
         }}
       >
-        <ActivityIndicator size={40} color={colors.primary} />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }

@@ -10,6 +10,7 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import HomeScreen from '../screens/home/HomeScreen';
 import ResourcesScreen from '../screens/home/ResourcesScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
+import { Ionicons } from '@expo/vector-icons';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -43,24 +44,34 @@ const AuthStack = () => (
 const MainTabs = () => {
   const { colors, typography } = useTheme();
 
+  const iconForRoute = (routeName, focused) => {
+    const icons = {
+      Home: focused ? 'home' : 'home-outline',
+      Resources: focused ? 'book' : 'book-outline',
+      Profile: focused ? 'person' : 'person-outline'
+    };
+
+    return icons[routeName] ?? 'ellipse';
+  };
+
   return (
     <Tab.Navigator
-      screenOptions={{
-        headerTitleStyle: {
-          fontFamily: typography.heading.h5.fontFamily,
-          fontSize: typography.heading.h5.fontSize,
-          color: colors.textPrimary
-        },
-        headerStyle: {
-          backgroundColor: colors.background
-        },
+      screenOptions={({ route }) => ({
+        headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textMuted,
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.border
-        }
-      }}
+        },
+        tabBarLabelStyle: {
+          fontFamily: typography.caption.fontFamily,
+          fontSize: typography.caption.fontSize
+        },
+        tabBarIcon: ({ focused, color, size }) => (
+          <Ionicons name={iconForRoute(route.name, focused)} size={size} color={color} />
+        )
+      })}
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }} />
       <Tab.Screen name="Resources" component={ResourcesScreen} options={{ title: 'Resources' }} />
