@@ -1,5 +1,8 @@
 import { StyleSheet } from 'react-native';
 
+// Tab bar height + circle extension above
+const TAB_BAR_BOTTOM_PADDING = 80;
+
 export const createSurfaceScrollStyles = (theme) =>
   StyleSheet.create({
     wrapper: {
@@ -16,7 +19,7 @@ export const createSurfaceScrollStyles = (theme) =>
     content: {
       paddingHorizontal: theme.spacing?.xl ?? 24,
       paddingTop: theme.spacing?.xl ?? 24,
-      paddingBottom: theme.spacing?.xxl ?? theme.spacing?.xl ?? 24
+      paddingBottom: TAB_BAR_BOTTOM_PADDING + (theme.spacing?.xl ?? 24)
     }
   });
 

@@ -8,8 +8,13 @@ import { useTheme } from '../theme';
 import useAuth from '../hooks/useAuth';
 import LoginScreen from '../screens/auth/LoginScreen';
 import HomeScreen from '../screens/home/HomeScreen';
-import ResourcesScreen from '../screens/home/ResourcesScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
+import AskAIScreen from '../screens/ai/AskAIScreen';
+import ClubDirectoryScreen from '../screens/clubs/ClubDirectoryScreen';
+import ClubDetailScreen from '../screens/clubs/ClubDetailScreen';
+import NotificationsScreen from '../screens/notifications/NotificationsScreen';
+import HandbookScreen from '../screens/handbook/HandbookScreen';
+import CustomTabBar from '../components/navigation/CustomTabBar';
 import { Ionicons } from '@expo/vector-icons';
 
 const Stack = createNativeStackNavigator();
@@ -41,13 +46,39 @@ const AuthStack = () => (
   </Stack.Navigator>
 );
 
+// Stack Navigator for Home tab (includes nested screens)
+const HomeStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="HomeMain" component={HomeScreen} />
+    <Stack.Screen name="Notifications" component={NotificationsScreen} />
+  </Stack.Navigator>
+);
+
+// Stack Navigator for CLB tab
+const ClubStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="ClubDirectory" component={ClubDirectoryScreen} />
+    <Stack.Screen name="ClubDetail" component={ClubDetailScreen} />
+  </Stack.Navigator>
+);
+
+// Stack Navigator for Ask AI tab
+const AskAIStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="AskAIMain" component={AskAIScreen} />
+  </Stack.Navigator>
+);
+
 const MainTabs = () => {
   const { colors, typography } = useTheme();
 
   const iconForRoute = (routeName, focused) => {
     const icons = {
       Home: focused ? 'home' : 'home-outline',
-      Resources: focused ? 'book' : 'book-outline',
+      Handbook: focused ? 'book' : 'book-outline',
+      Clubs: focused ? 'people' : 'people-outline',
+      AskAI: focused ? 'chatbubbles' : 'chatbubbles-outline',
+      Notifications: focused ? 'notifications' : 'notifications-outline',
       Profile: focused ? 'person' : 'person-outline'
     };
 
@@ -56,26 +87,17 @@ const MainTabs = () => {
 
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textMuted,
-        tabBarStyle: {
-          backgroundColor: colors.surface,
-          borderTopColor: colors.border
-        },
-        tabBarLabelStyle: {
-          fontFamily: typography.caption.fontFamily,
-          fontSize: typography.caption.fontSize
-        },
-        tabBarIcon: ({ focused, color, size }) => (
-          <Ionicons name={iconForRoute(route.name, focused)} size={size} color={color} />
-        )
-      })}
+      tabBar={(props) => <CustomTabBar {...props} />}
+      screenOptions={{
+        headerShown: false
+      }}
     >
-      <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }} />
-      <Tab.Screen name="Resources" component={ResourcesScreen} options={{ title: 'Resources' }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
+      <Tab.Screen name="Home" component={HomeStack} options={{ title: 'Trang chủ' }} />
+      <Tab.Screen name="Handbook" component={HandbookScreen} options={{ title: 'Sổ tay' }} />
+      <Tab.Screen name="Clubs" component={ClubStack} options={{ title: 'CLB' }} />
+      <Tab.Screen name="AskAI" component={AskAIStack} options={{ title: 'Hỏi AI' }} />
+      <Tab.Screen name="Notifications" component={NotificationsScreen} options={{ title: 'Thông báo' }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Cá nhân' }} />
     </Tab.Navigator>
   );
 };
