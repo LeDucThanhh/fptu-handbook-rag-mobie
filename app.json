@@ -43,6 +43,9 @@
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "EXPO_PUBLIC_API_URL": "https://fptu-handbook-esgma9b2hzckcnce.southeastasia-01.azurewebsites.net"
+    }
   }
 }

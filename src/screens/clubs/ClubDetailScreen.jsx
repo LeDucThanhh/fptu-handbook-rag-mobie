@@ -1,52 +1,131 @@
-import React, { useMemo, useRef } from 'react';
-import { View, Text, Pressable, StyleSheet, ScrollView, Linking, Animated } from 'react-native';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
+import { View, Text, Pressable, StyleSheet, ScrollView, Linking, Animated, ActivityIndicator } from 'react-native';
 import { useTheme } from '../../theme';
+import { useModal } from '../../context/ModalContext';
 import DynamicHeader from '../../components/navigation/DynamicHeader';
 import { createSurfaceScrollStyles } from '../../theme/layout';
 import { Ionicons } from '@expo/vector-icons';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import { getClubById } from '../../services/clubService';
 
 const ClubDetailScreen = () => {
   const theme = useTheme();
   const { colors, spacing, typography, radii } = theme;
   const route = useRoute();
   const navigation = useNavigation();
+  const { showToast } = useModal();
   const { clubId } = route.params || {};
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const styles = useMemo(() => createStyles(theme), [theme]);
   const scrollStyles = useMemo(() => createSurfaceScrollStyles(theme), [theme]);
 
-  // Mock data - in real app, fetch from API using clubId
-  const club = {
-    id: clubId || 1,
-    name: 'CLB Lập trình',
-    type: 'Học thuật',
-    description: 'Câu lạc bộ dành cho sinh viên yêu thích lập trình và phát triển phần mềm. Chúng tôi tổ chức các buổi workshop, hackathon và các hoạt động học tập thú vị.',
-    members: 150,
-    email: 'clb.laptrinh@fpt.edu.vn',
-    fanpage: 'https://facebook.com/clb-laptrinh-fpt',
-    management: [
-      { role: 'Chủ nhiệm', name: 'Nguyễn Văn A', term: '2024-2025' },
-      { role: 'Phó chủ nhiệm', name: 'Trần Thị B', term: '2024-2025' },
-      { role: 'Thư ký', name: 'Lê Văn C', term: '2024-2025' }
-    ],
-    upcomingEvents: [
-      { id: 1, title: 'Workshop React Native', date: '15/12/2024', time: '14:00' },
-      { id: 2, title: 'Hackathon FPT 2024', date: '20/12/2024', time: '08:00' }
-    ]
-  };
+  const [club, setClub] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch club details
+  useEffect(() => {
+    const fetchClubDetails = async () => {
+      if (!clubId) {
+        setError('Không tìm thấy ID câu lạc bộ');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await getClubById(clubId);
+        
+        if (response.success && response.data) {
+          setClub(response.data);
+        } else {
+          setError('Không thể tải thông tin câu lạc bộ');
+        }
+      } catch (err) {
+        console.error('Error fetching club details:', err);
+        setError('Không thể tải thông tin câu lạc bộ');
+        showToast('Không thể tải thông tin câu lạc bộ. Vui lòng thử lại.', 'error');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchClubDetails();
+  }, [clubId]);
 
   const handleEmailPress = () => {
-    Linking.openURL(`mailto:${club.email}`);
+    if (club?.contactEmail) {
+      Linking.openURL(`mailto:${club.contactEmail}`);
+    }
   };
 
   const handleFanpagePress = () => {
-    Linking.openURL(club.fanpage);
+    if (club?.facebookUrl) {
+      Linking.openURL(club.facebookUrl);
+    }
   };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <DynamicHeader title="Câu lạc bộ" value={scrollOffsetY} />
+        <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text
+            style={{
+              fontSize: typography.body.medium.fontSize,
+              fontFamily: typography.body.medium.fontFamily,
+              color: colors.textMuted,
+              marginTop: spacing.md
+            }}
+          >
+            Đang tải thông tin...
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
+  if (error || !club) {
+    return (
+      <View style={styles.container}>
+        <DynamicHeader title="Câu lạc bộ" value={scrollOffsetY} />
+        <View style={[styles.errorContainer, { backgroundColor: colors.background }]}>
+          <Ionicons name="alert-circle" size={48} color={colors.error || colors.textMuted} />
+          <Text
+            style={{
+              fontSize: typography.body.medium.fontSize,
+              fontFamily: typography.body.medium.fontFamily,
+              color: colors.textMuted,
+              marginTop: spacing.md,
+              textAlign: 'center'
+            }}
+          >
+            {error || 'Không tìm thấy thông tin câu lạc bộ'}
+          </Text>
+          <Pressable
+            onPress={() => navigation.goBack()}
+            style={[styles.retryButton, { backgroundColor: colors.primary }]}
+          >
+            <Text
+              style={{
+                fontSize: typography.body.medium.fontSize,
+                fontFamily: typography.body.medium.fontFamily,
+                color: colors.background
+              }}
+            >
+              Quay lại
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <DynamicHeader title={club.name} value={scrollOffsetY} />
+      <DynamicHeader title={club.clubName || club.name || 'Câu lạc bộ'} value={scrollOffsetY} />
       <View style={scrollStyles.wrapper}>
         <Animated.ScrollView
           scrollEventThrottle={16}
@@ -73,206 +152,139 @@ const ClubDetailScreen = () => {
                     marginBottom: spacing.xs
                   }}
                 >
-                  {club.name}
+                  {club.clubName || club.name}
                 </Text>
+                {club.clubCode && (
+                  <Text
+                    style={{
+                      fontSize: typography.body.small.fontSize,
+                      fontFamily: typography.body.small.fontFamily,
+                      color: colors.textMuted,
+                      marginBottom: spacing.xs
+                    }}
+                  >
+                    Mã: {club.clubCode}
+                  </Text>
+                )}
                 <View style={styles.clubMeta}>
-                  <Ionicons name="pricetag" size={16} color={colors.textMuted} />
-                  <Text
-                    style={{
-                      fontSize: typography.body.small.fontSize,
-                      fontFamily: typography.body.small.fontFamily,
-                      color: colors.textMuted,
-                      marginLeft: spacing.xs
-                    }}
-                  >
-                    {club.type}
-                  </Text>
-                  <Text style={{ marginHorizontal: spacing.xs, color: colors.textMuted }}>•</Text>
-                  <Ionicons name="people" size={16} color={colors.textMuted} />
-                  <Text
-                    style={{
-                      fontSize: typography.body.small.fontSize,
-                      fontFamily: typography.body.small.fontFamily,
-                      color: colors.textMuted,
-                      marginLeft: spacing.xs
-                    }}
-                  >
-                    {club.members} thành viên
-                  </Text>
+                  {club.typeName && (
+                    <>
+                      <Ionicons name="pricetag" size={16} color={colors.textMuted} />
+                      <Text
+                        style={{
+                          fontSize: typography.body.small.fontSize,
+                          fontFamily: typography.body.small.fontFamily,
+                          color: colors.textMuted,
+                          marginLeft: spacing.xs
+                        }}
+                      >
+                        {club.typeName}
+                      </Text>
+                    </>
+                  )}
                 </View>
               </View>
             </View>
 
-            <Text
-              style={{
-                fontSize: typography.body.medium.fontSize,
-                fontFamily: typography.body.medium.fontFamily,
-                color: colors.textSecondary,
-                marginTop: spacing.md,
-                lineHeight: 24
-              }}
-            >
-              {club.description}
-            </Text>
-          </View>
-
-          {/* Management Board */}
-          <View style={{ marginTop: spacing.xl }}>
-            <Text
-              style={{
-                fontSize: typography.heading.h4.fontSize,
-                fontFamily: typography.heading.h4.fontFamily,
-                color: colors.textPrimary,
-                marginBottom: spacing.md
-              }}
-            >
-              Ban quản lý
-            </Text>
-            {club.management.map((member, index) => (
-              <View
-                key={index}
-                style={[styles.managementCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+            {(club.fullDescription || club.shortDescription) && (
+              <Text
+                style={{
+                  fontSize: typography.body.medium.fontSize,
+                  fontFamily: typography.body.medium.fontFamily,
+                  color: colors.textSecondary,
+                  marginTop: spacing.md,
+                  lineHeight: 24
+                }}
               >
-                <View style={styles.managementInfo}>
-                  <Text
-                    style={{
-                      fontSize: typography.body.medium.fontSize,
-                      fontFamily: typography.body.medium.fontFamily,
-                      color: colors.textPrimary,
-                      fontWeight: '600'
-                    }}
-                  >
-                    {member.role}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: typography.body.small.fontSize,
-                      fontFamily: typography.body.small.fontFamily,
-                      color: colors.textSecondary,
-                      marginTop: spacing.xs
-                    }}
-                  >
-                    {member.name}
-                  </Text>
-                </View>
-                <Text
-                  style={{
-                    fontSize: typography.caption.fontSize,
-                    fontFamily: typography.caption.fontFamily,
-                    color: colors.textMuted
-                  }}
-                >
-                  Nhiệm kỳ: {member.term}
-                </Text>
-              </View>
-            ))}
+                {club.fullDescription || club.shortDescription}
+              </Text>
+            )}
           </View>
 
           {/* Contact Information */}
-          <View style={{ marginTop: spacing.xl }}>
-            <Text
-              style={{
-                fontSize: typography.heading.h4.fontSize,
-                fontFamily: typography.heading.h4.fontFamily,
-                color: colors.textPrimary,
-                marginBottom: spacing.md
-              }}
-            >
-              Thông tin liên hệ
-            </Text>
-            <Pressable
-              onPress={handleEmailPress}
-              style={({ pressed }) => [
-                styles.contactCard,
-                { backgroundColor: colors.surface, borderColor: colors.border, opacity: pressed ? 0.7 : 1 }
-              ]}
-            >
-              <Ionicons name="mail" size={24} color={colors.primary} />
+          {(club.contactEmail || club.contactPhone || club.facebookUrl) && (
+            <View style={{ marginTop: spacing.xl }}>
               <Text
                 style={{
-                  fontSize: typography.body.medium.fontSize,
-                  fontFamily: typography.body.medium.fontFamily,
+                  fontSize: typography.heading.h4.fontSize,
+                  fontFamily: typography.heading.h4.fontFamily,
                   color: colors.textPrimary,
-                  marginLeft: spacing.md,
-                  flex: 1
+                  marginBottom: spacing.md
                 }}
               >
-                {club.email}
+                Thông tin liên hệ
               </Text>
-              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
-            </Pressable>
-            <Pressable
-              onPress={handleFanpagePress}
-              style={({ pressed }) => [
-                styles.contactCard,
-                { backgroundColor: colors.surface, borderColor: colors.border, opacity: pressed ? 0.7 : 1 }
-              ]}
-            >
-              <Ionicons name="logo-facebook" size={24} color={colors.primary} />
-              <Text
-                style={{
-                  fontSize: typography.body.medium.fontSize,
-                  fontFamily: typography.body.medium.fontFamily,
-                  color: colors.textPrimary,
-                  marginLeft: spacing.md,
-                  flex: 1
-                }}
-              >
-                Fanpage
-              </Text>
-              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
-            </Pressable>
-          </View>
-
-          {/* Upcoming Events */}
-          <View style={{ marginTop: spacing.xl, marginBottom: spacing.xl }}>
-            <Text
-              style={{
-                fontSize: typography.heading.h4.fontSize,
-                fontFamily: typography.heading.h4.fontFamily,
-                color: colors.textPrimary,
-                marginBottom: spacing.md
-              }}
-            >
-              Sự kiện sắp diễn ra
-            </Text>
-            {club.upcomingEvents.map((event) => (
-              <View
-                key={event.id}
-                style={[styles.eventCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
-              >
-                <View style={[styles.eventDate, { backgroundColor: colors.primaryLight + '20' }]}>
-                  <Ionicons name="calendar" size={20} color={colors.primary} />
-                </View>
-                <View style={styles.eventInfo}>
+              {club.contactEmail && (
+                <Pressable
+                  onPress={handleEmailPress}
+                  style={({ pressed }) => [
+                    styles.contactCard,
+                    { backgroundColor: colors.surface, borderColor: colors.border, opacity: pressed ? 0.7 : 1 }
+                  ]}
+                >
+                  <Ionicons name="mail" size={24} color={colors.primary} />
                   <Text
                     style={{
                       fontSize: typography.body.medium.fontSize,
                       fontFamily: typography.body.medium.fontFamily,
                       color: colors.textPrimary,
-                      fontWeight: '600',
-                      marginBottom: spacing.xs
+                      marginLeft: spacing.md,
+                      flex: 1
                     }}
                   >
-                    {event.title}
+                    {club.contactEmail}
                   </Text>
-                  <View style={styles.eventMeta}>
-                    <Ionicons name="time-outline" size={14} color={colors.textMuted} />
-                    <Text
-                      style={{
-                        fontSize: typography.body.small.fontSize,
-                        fontFamily: typography.body.small.fontFamily,
-                        color: colors.textMuted,
-                        marginLeft: spacing.xs
-                      }}
-                    >
-                      {event.date} • {event.time}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            ))}
-          </View>
+                  <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+                </Pressable>
+              )}
+              {club.contactPhone && (
+                <Pressable
+                  onPress={() => Linking.openURL(`tel:${club.contactPhone}`)}
+                  style={({ pressed }) => [
+                    styles.contactCard,
+                    { backgroundColor: colors.surface, borderColor: colors.border, opacity: pressed ? 0.7 : 1 }
+                  ]}
+                >
+                  <Ionicons name="call" size={24} color={colors.primary} />
+                  <Text
+                    style={{
+                      fontSize: typography.body.medium.fontSize,
+                      fontFamily: typography.body.medium.fontFamily,
+                      color: colors.textPrimary,
+                      marginLeft: spacing.md,
+                      flex: 1
+                    }}
+                  >
+                    {club.contactPhone}
+                  </Text>
+                  <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+                </Pressable>
+              )}
+              {club.facebookUrl && (
+                <Pressable
+                  onPress={handleFanpagePress}
+                  style={({ pressed }) => [
+                    styles.contactCard,
+                    { backgroundColor: colors.surface, borderColor: colors.border, opacity: pressed ? 0.7 : 1 }
+                  ]}
+                >
+                  <Ionicons name="logo-facebook" size={24} color={colors.primary} />
+                  <Text
+                    style={{
+                      fontSize: typography.body.medium.fontSize,
+                      fontFamily: typography.body.medium.fontFamily,
+                      color: colors.textPrimary,
+                      marginLeft: spacing.md,
+                      flex: 1
+                    }}
+                  >
+                    Fanpage
+                  </Text>
+                  <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+                </Pressable>
+              )}
+            </View>
+          )}
         </Animated.ScrollView>
       </View>
     </View>
@@ -351,6 +363,24 @@ const createStyles = (theme) =>
     eventMeta: {
       flexDirection: 'row',
       alignItems: 'center'
+    },
+    loadingContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: theme.spacing.xl
+    },
+    errorContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: theme.spacing.xl
+    },
+    retryButton: {
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.md,
+      borderRadius: theme.radii.md,
+      marginTop: theme.spacing.md
     }
   });
 

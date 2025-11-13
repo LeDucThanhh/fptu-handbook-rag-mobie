@@ -16,7 +16,7 @@ const LoginScreen = () => {
       // TODO: Implement Google OAuth
       // For now, mock login
       const mockEmail = email || 'student@fpt.edu.vn';
-      
+
       if (!mockEmail.endsWith('@fpt.edu.vn')) {
         Alert.alert('Lỗi', 'Vui lòng sử dụng email sinh viên FPT (@fpt.edu.vn)');
         setIsLoading(false);

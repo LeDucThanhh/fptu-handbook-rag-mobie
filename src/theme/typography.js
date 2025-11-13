@@ -3,11 +3,15 @@ import { Platform } from 'react-native';
 const systemFont = Platform.select({ ios: 'System', android: 'sans-serif', default: 'System' });
 
 export const fontFamilies = {
-  regular: 'Urbanist_400Regular',
-  medium: 'Urbanist_500Medium',
-  semiBold: 'Urbanist_600SemiBold',
-  bold: 'Urbanist_700Bold',
-  extraBold: 'Urbanist_800ExtraBold',
+  // Dongle font family (default)
+  regular: 'Dongle_400Regular',
+  light: 'Dongle_300Light',
+  bold: 'Dongle_700Bold',
+  // Aliases for consistency
+  medium: 'Dongle_400Regular',
+  semiBold: 'Dongle_700Bold',
+  extraBold: 'Dongle_700Bold',
+  // Fallback
   fallback: systemFont
 };
 
@@ -22,27 +26,27 @@ const createTextStyle = (fontSize, lineHeight, familyKey = 'regular') => ({
 const typography = {
   fontFamily: resolveFontFamily('regular'),
   heading: {
-    h1: createTextStyle(32, 38, 'extraBold'),
-    h2: createTextStyle(28, 34, 'bold'),
-    h3: createTextStyle(24, 30, 'bold'),
-    h4: createTextStyle(20, 26, 'semiBold'),
-    h5: createTextStyle(18, 24, 'semiBold'),
-    h6: createTextStyle(16, 22, 'medium')
+    h1: createTextStyle(42, 50, 'extraBold'),
+    h2: createTextStyle(38, 46, 'bold'),
+    h3: createTextStyle(34, 42, 'bold'),
+    h4: createTextStyle(30, 38, 'semiBold'),
+    h5: createTextStyle(26, 34, 'semiBold'),
+    h6: createTextStyle(22, 30, 'medium')
   },
   body: {
-    large: createTextStyle(18, 26, 'regular'),
-    medium: createTextStyle(16, 24, 'regular'),
-    small: createTextStyle(14, 20, 'regular'),
-    tiny: createTextStyle(12, 18, 'regular')
+    large: createTextStyle(24, 34, 'regular'),
+    medium: createTextStyle(22, 32, 'regular'),
+    small: createTextStyle(20, 28, 'regular'),
+    tiny: createTextStyle(18, 26, 'regular')
   },
   button: {
-    fontSize: 16,
-    lineHeight: 20,
+    fontSize: 22,
+    lineHeight: 28,
     fontFamily: resolveFontFamily('semiBold')
   },
   caption: {
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: 18,
+    lineHeight: 24,
     fontFamily: resolveFontFamily('medium')
   }
 };

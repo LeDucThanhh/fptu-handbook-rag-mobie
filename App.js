@@ -6,6 +6,7 @@ import { useFonts } from 'expo-font';
 
 import { ThemeProvider } from './src/theme';
 import { AuthProvider } from './src/context/AuthContext';
+import { ModalProvider } from './src/context/ModalContext';
 import AppNavigator from './src/navigation/AppNavigator';
 
 SplashScreen.preventAutoHideAsync().catch(() => {
@@ -14,11 +15,10 @@ SplashScreen.preventAutoHideAsync().catch(() => {
 
 export default function App() {
   const [fontsLoaded, fontsError] = useFonts({
-    Urbanist_400Regular: require('./assets/static/Urbanist-Regular.ttf'),
-    Urbanist_500Medium: require('./assets/static/Urbanist-Medium.ttf'),
-    Urbanist_600SemiBold: require('./assets/static/Urbanist-SemiBold.ttf'),
-    Urbanist_700Bold: require('./assets/static/Urbanist-Bold.ttf'),
-    Urbanist_800ExtraBold: require('./assets/static/Urbanist-ExtraBold.ttf')
+    // Dongle fonts
+    Dongle_300Light: require('./assets/static/Dongle-Light.ttf'),
+    Dongle_400Regular: require('./assets/static/Dongle-Regular.ttf'),
+    Dongle_700Bold: require('./assets/static/Dongle-Bold.ttf')
   });
 
   useEffect(() => {
@@ -41,8 +41,10 @@ export default function App() {
     <ThemeProvider>
       <SafeAreaProvider>
         <AuthProvider>
-          <StatusBar style="dark" />
-          <AppNavigator />
+          <ModalProvider>
+            <StatusBar style="dark" />
+            <AppNavigator />
+          </ModalProvider>
         </AuthProvider>
       </SafeAreaProvider>
     </ThemeProvider>

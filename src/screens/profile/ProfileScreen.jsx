@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { View, Text, Pressable, Animated, StyleSheet, Alert, Linking } from 'react-native';
 import { useTheme } from '../../theme';
 import useAuth from '../../hooks/useAuth';
+import { useModal } from '../../context/ModalContext';
 import DynamicHeader from '../../components/navigation/DynamicHeader';
 import { createSurfaceScrollStyles } from '../../theme/layout';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,6 +11,7 @@ const ProfileScreen = () => {
   const theme = useTheme();
   const { colors, spacing, typography, radii } = theme;
   const { user, roles, signOut } = useAuth();
+  const { showConfirmation, showToast } = useModal();
   const [language, setLanguage] = useState('vi'); // 'vi' or 'en'
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const styles = useMemo(() => createStyles(theme), [theme]);
@@ -17,7 +19,7 @@ const ProfileScreen = () => {
 
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
-    Alert.alert('Thông báo', `Ngôn ngữ đã được chuyển sang ${lang === 'vi' ? 'Tiếng Việt' : 'English'}`);
+    showToast(`Ngôn ngữ đã được chuyển sang ${lang === 'vi' ? 'Tiếng Việt' : 'English'}`, 'success');
   };
 
   const handleHelp = () => {
@@ -43,15 +45,15 @@ const ProfileScreen = () => {
     );
   };
 
-  const handleSignOut = () => {
-    Alert.alert(
-      'Đăng xuất',
-      'Bạn có chắc chắn muốn đăng xuất?',
-      [
-        { text: 'Hủy', style: 'cancel' },
-        { text: 'Đăng xuất', onPress: signOut, style: 'destructive' }
-      ]
-    );
+  const handleSignOut = async () => {
+    const confirmed = await showConfirmation({
+      title: 'Đăng xuất',
+      message: 'Bạn có chắc chắn muốn đăng xuất?',
+      confirmText: 'Đăng xuất',
+      cancelText: 'Hủy',
+      type: 'danger',
+      onConfirm: signOut
+    });
   };
 
   const renderSettingItem = (icon, title, subtitle, onPress, showChevron = true) => (
